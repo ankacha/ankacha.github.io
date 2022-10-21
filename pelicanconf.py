@@ -9,6 +9,10 @@ TIMEZONE = 'Europe/London'
 DEFAULT_LANG = 'English'
 
 OUTPUT_PATH = 'docs/'
+#PLUGIN_PATHS = ['plugins']
+#PLUGINS = ['jinja2content']
+#THEME = ['pelican-themes/html5-dopetrope']
+#JINJA2CONTENT_TEMPLATES = ['jinja2templates']
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
