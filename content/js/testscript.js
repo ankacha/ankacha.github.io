@@ -1,22 +1,57 @@
 function setup() {
-  createCanvas(710, 400);
-  background(102);
+  var canvas = createCanvas(710, 400, WEBGL);
+  canvas.parent('sketch-holder');
 }
 
 function draw() {
-  // Call the variableEllipse() method and send it the
-  // parameters for the current mouse position
-  // and the previous mouse position
-  variableEllipse(mouseX, mouseY, pmouseX, pmouseY);
-}
+  background(250);
 
-// The simple method variableEllipse() was created specifically
-// for this program. It calculates the speed of the mouse
-// and draws a small ellipse if the mouse is moving slowly
-// and draws a large ellipse if the mouse is moving quickly
+  translate(-240, -100, 0);
+  normalMaterial();
+  push();
+  rotateZ(frameCount * 0.01);
+  rotateX(frameCount * 0.01);
+  rotateY(frameCount * 0.01);
+  plane(70);
+  pop();
 
-function variableEllipse(x, y, px, py) {
-  let speed = abs(x - px) + abs(y - py);
-  stroke(speed);
-  ellipse(x, y, speed, speed);
+  translate(240, 0, 0);
+  push();
+  rotateZ(frameCount * 0.01);
+  rotateX(frameCount * 0.01);
+  rotateY(frameCount * 0.01);
+  box(70, 70, 70);
+  pop();
+
+  translate(240, 0, 0);
+  push();
+  rotateZ(frameCount * 0.01);
+  rotateX(frameCount * 0.01);
+  rotateY(frameCount * 0.01);
+  cylinder(70, 70);
+  pop();
+
+  translate(-240 * 2, 200, 0);
+  push();
+  rotateZ(frameCount * 0.01);
+  rotateX(frameCount * 0.01);
+  rotateY(frameCount * 0.01);
+  cone(70, 70);
+  pop();
+
+  translate(240, 0, 0);
+  push();
+  rotateZ(frameCount * 0.01);
+  rotateX(frameCount * 0.01);
+  rotateY(frameCount * 0.01);
+  torus(70, 20);
+  pop();
+
+  translate(240, 0, 0);
+  push();
+  rotateZ(frameCount * 0.01);
+  rotateX(frameCount * 0.01);
+  rotateY(frameCount * 0.01);
+  sphere(70);
+  pop();
 }

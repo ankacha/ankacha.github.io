@@ -6,12 +6,11 @@ PATH = 'content'
 
 TIMEZONE = 'Europe/London'
 
-DEFAULT_LANG = 'English'
+DEFAULT_LANG = 'en'
 
 OUTPUT_PATH = 'docs/'
-PLUGIN_PATHS = ['./plugins']
-#PLUGINS = ['pelican-js']
 THEME = './pelican-themes/html5-dopetrope'
+PLUGINS = None
 #JINJA2CONTENT_TEMPLATES = ['jinja2templates']
 
 
