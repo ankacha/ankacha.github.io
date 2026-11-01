@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>ankacha · Projects v1.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Self-contained, browser-based structural engineering tools: Frame Pusher, Arch Pusher, Cable Pusher and Codex Structura.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2309050f'/%3E%3Cpath d='M6 25V11l10-5 10 5v14' fill='none' stroke='%23b44cff' stroke-width='2.6' stroke-linejoin='round'/%3E%3Cpath d='M6 11h20' stroke='%2319f0ff' stroke-width='2.2'/%3E%3Ccircle cx='16' cy='6' r='2.6' fill='%23ff2bd6'/%3E%3C/svg%3E">
+<style>
+/* ===== tokens: shared cyberpunk theme (Frame Pusher family) ===== */
+:root{--r:14px;--neon2:#0891b2;--neon3:#c026d3;--acc:#8a2be2;--glow:rgba(138,43,226,.30);--bg:#f0eafc;--panel:#fcfaff;--ink:#1a1033;--mut:#68589a;--line:#d5c4f6;--mem:#2a1b52;--grid:#e3d8fb;
+  --sh:0 12px 30px -14px rgba(90,20,160,.5),0 0 0 1px rgba(138,43,226,.10);--sh-s:0 1px 2px rgba(60,20,120,.12);color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="dark"]{color-scheme:dark;--neon2:#19f0ff;--neon3:#ff2bd6;--acc:#b44cff;--glow:rgba(180,76,255,.5);--bg:#09050f;--panel:#110a20;--ink:#ece6ff;--mut:#9d90c9;--line:#2c1e52;--mem:#e9e0ff;--grid:#1c1233;
+  --sh:0 16px 44px -14px rgba(0,0,0,.85),0 0 0 1px rgba(180,76,255,.24),0 0 30px -8px rgba(180,76,255,.5);--sh-s:none}
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--acc) 60%,transparent) transparent}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(900px 520px at 12% -8%,color-mix(in srgb,var(--acc) 16%,transparent),transparent),radial-gradient(700px 420px at 100% 110%,color-mix(in srgb,var(--neon3) 9%,transparent),transparent),var(--bg);background-attachment:fixed;color:var(--ink);font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:.005em}
+::selection{background:color-mix(in srgb,var(--neon3) 45%,transparent)}
+a{color:inherit}
+button{display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1 inherit;font-family:inherit;color:var(--ink);background:color-mix(in srgb,var(--acc) 5%,var(--panel));border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;letter-spacing:.015em;transition:background .12s,border-color .12s,box-shadow .12s}
+button:hover{border-color:var(--neon2);background:color-mix(in srgb,var(--neon2) 9%,var(--panel));box-shadow:0 0 0 1px color-mix(in srgb,var(--neon2) 55%,transparent),0 0 16px -3px color-mix(in srgb,var(--neon2) 60%,transparent)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--neon2);outline-offset:2px}
+button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ===== top bar ===== */
+#top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 30%,var(--panel)) 0%,var(--panel) 48%,color-mix(in srgb,var(--neon3) 18%,var(--panel)) 100%);border-bottom:1px solid color-mix(in srgb,var(--acc) 65%,var(--line));box-shadow:0 1px 22px -6px var(--glow);backdrop-filter:blur(6px)}
+#top .tt{background:linear-gradient(90deg,var(--acc),var(--neon3) 55%,var(--neon2));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:.14em;font-weight:800;font-size:13px;white-space:nowrap;text-decoration:none}
+#top small{color:var(--mut);font:11px ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+#top i{width:1px;height:18px;background:linear-gradient(var(--acc),var(--neon3));opacity:.6;margin:0 4px}
+#top nav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+#top nav a{color:var(--mut);text-decoration:none;font-weight:600;font-size:12.5px;padding:5px 9px;border:1px solid transparent;border-radius:8px}
+#top nav a:hover{color:var(--ink);border-color:color-mix(in srgb,var(--neon2) 70%,transparent);background:color-mix(in srgb,var(--neon2) 10%,transparent)}
+#thm{background:transparent;border-color:transparent;box-shadow:none;color:var(--mut);padding:6px 8px}
+#thm:hover{color:var(--ink)}
+
+/* ===== hero ===== */
+main{max-width:1180px;margin:0 auto;padding:44px max(20px,env(safe-area-inset-left,0px)) 24px max(20px,env(safe-area-inset-right,0px))}
+.gh{display:flex;align-items:center;gap:8px;color:color-mix(in srgb,var(--neon2) 80%,var(--ink));text-transform:uppercase;letter-spacing:.17em;font-size:10.5px;font-weight:700;margin:0 0 10px}
+.gh::before{content:"";flex:none;width:16px;height:2px;background:linear-gradient(90deg,var(--neon3),var(--neon2));box-shadow:0 0 8px var(--neon2)}
+.hero h1{margin:0;font-size:clamp(28px,4.6vw,46px);line-height:1.08;letter-spacing:-.01em;font-weight:800;max-width:20ch}
+.hero h1 span{background:linear-gradient(90deg,var(--acc),var(--neon3) 55%,var(--neon2));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hero p{margin:14px 0 0;max-width:66ch;color:var(--mut);font-size:15px;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:600;color:var(--mut);background:color-mix(in srgb,var(--acc) 6%,var(--panel));border:1px solid color-mix(in srgb,var(--acc) 30%,var(--line))}
+.chip b{width:7px;height:7px;border-radius:50%;background:var(--neon2);box-shadow:0 0 8px var(--neon2)}
+.chip:nth-child(2) b{background:var(--neon3);box-shadow:0 0 8px var(--neon3)}
+.chip:nth-child(3) b{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+
+/* ===== cards ===== */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:38px}
+@media(max-width:780px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{position:relative;display:flex;flex-direction:column;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid color-mix(in srgb,var(--acc) 40%,var(--line));border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);transition:transform .18s ease,border-color .18s,box-shadow .18s}
+.card:hover{transform:translateY(-3px);border-color:var(--neon2);box-shadow:var(--sh),0 0 0 1px color-mix(in srgb,var(--neon2) 55%,transparent),0 0 32px -6px color-mix(in srgb,var(--neon2) 55%,transparent)}
+.card .art{position:relative;aspect-ratio:16/9;background:linear-gradient(160deg,color-mix(in srgb,var(--acc) 10%,var(--panel)),color-mix(in srgb,var(--acc) 3%,var(--bg)));border-bottom:1px solid color-mix(in srgb,var(--acc) 35%,var(--line));overflow:hidden}
+.card .art svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.card .art::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--panel) 40%,transparent))}
+.tag{position:absolute;top:12px;left:12px;z-index:2;font:700 10px/1 ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:6px;color:var(--ink);background:color-mix(in srgb,var(--panel) 82%,transparent);border:1px solid color-mix(in srgb,var(--acc) 45%,var(--line));backdrop-filter:blur(4px)}
+.card .body{display:flex;flex-direction:column;gap:8px;padding:18px 20px 20px;flex:1}
+.card h2{margin:0;display:flex;align-items:baseline;gap:10px;font-size:19px;font-weight:800;letter-spacing:.01em}
+.card h2 small{font:600 11px ui-monospace,"SF Mono",Menlo,monospace;color:var(--mut);letter-spacing:.04em}
+.card p{margin:0;color:var(--mut);font-size:13.5px;line-height:1.6;flex:1}
+.card .go{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;padding-top:12px;border-top:1px solid var(--line);font-size:12px}
+.card .go code{color:var(--mut);font:11.5px ui-monospace,"SF Mono",Menlo,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .go span{display:inline-flex;align-items:center;gap:6px;flex:none;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px;color:#fff;padding:6px 11px;border-radius:8px;background:linear-gradient(135deg,var(--acc),var(--neon3));box-shadow:0 0 18px -4px color-mix(in srgb,var(--neon3) 70%,transparent)}
+.card .go span svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s}
+.card:hover .go span svg{transform:translateX(3px)}
+
+/* ===== card art palette ===== */
+.art .gd{stroke:var(--grid);stroke-width:1}
+.art .ink{stroke:var(--mem);fill:none}
+.art .ac{stroke:var(--acc);fill:none}
+.art .cy{stroke:var(--neon2);fill:none}
+.art .mg{stroke:var(--neon3);fill:none}
+.art .fa{fill:var(--acc)}.art .fc{fill:var(--neon2)}.art .fm{fill:var(--neon3)}.art .fi{fill:var(--mem)}.art .fp{fill:var(--panel)}
+.art .tx{fill:var(--mut);font:600 9px ui-monospace,Menlo,monospace}
+.art .tk{fill:var(--ink);font:700 9px ui-monospace,Menlo,monospace}
+.art .glow{filter:drop-shadow(0 0 4px var(--neon3))}
+.art .glowc{filter:drop-shadow(0 0 4px var(--neon2))}
+@media(prefers-reduced-motion:no-preference){
+  .art .dash{stroke-dasharray:5 5;animation:flow 2.4s linear infinite}
+  @keyframes flow{to{stroke-dashoffset:-20}}
+  .art .bob{animation:bob 1.6s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(3px)}}
+  .art .pulse{animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.55}}
+}
+
+/* ===== footer ===== */
+@media(max-width:520px){#top nav,#top i{display:none}#thm{margin-left:auto}}
+footer{max-width:1180px;margin:30px auto 0;padding:18px max(20px,env(safe-area-inset-left,0px)) 34px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;color:var(--mut);font-size:12px;border-top:1px solid color-mix(in srgb,var(--acc) 30%,var(--line))}
+footer .v{font:600 11px ui-monospace,"SF Mono",Menlo,monospace;color:var(--ink);padding:3px 8px;border-radius:6px;border:1px solid color-mix(in srgb,var(--acc) 40%,var(--line));background:color-mix(in srgb,var(--acc) 6%,var(--panel))}
+footer .sp{flex:1}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <a class="tt" href="./">ankacha</a><small>Projects v1.0</small>
+  <nav aria-label="Projects">
+    <a href="frame-pusher/">Frame</a><a href="arch-pusher/">Arch</a><a href="cable-pusher/">Cable</a><a href="codex-structura/">Codex</a>
+  </nav>
+  <i aria-hidden="true"></i>
+  <button id="thm" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
+    <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="gh">Structural engineering · Learning tools</div>
+    <h1>Push structures around and <span>see how they work.</span></h1>
+    <p>A small family of self-contained, browser-based apps for exploring structural behaviour — frames, masonry arches, cables and the codes that govern them. Each one is a single HTML file: nothing to install, nothing to sign in to, runs on a laptop, tablet or phone.</p>
+    <div class="chips"><span class="chip"><b></b>Single-file HTML</span><span class="chip"><b></b>Runs offline in the browser</span><span class="chip"><b></b>Built for teaching</span></div>
+  </section>
+
+  <section class="grid" aria-label="Projects">
+
+    <!-- ===== Frame Pusher ===== -->
+    <a class="card" href="frame-pusher/">
+      <div class="art">
+        <span class="tag">2D frame · FEA</span>
+        <svg viewBox="0 0 320 180" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <g class="gd" data-grid></g>
+          <!-- stiffness matrix inset -->
+          <g transform="translate(236 18)" data-matrix></g>
+          <!-- bending moment diagram (UDL on beam, fixed-base portal) -->
+          <path class="fm" opacity=".18" d="M70 62 Q100 112 130 62 Q160 112 190 62 Z"/>
+          <path class="mg glow" stroke-width="1.6" d="M70 62 Q100 112 130 62 Q160 112 190 62"/>
+          <!-- deflected shape -->
+          <path class="cy dash glowc" stroke-width="1.6" d="M70 150 C68 120 66 90 66 66 Q98 80 130 66 Q162 80 194 66 C194 90 192 120 190 150"/>
+          <!-- frame -->
+          <path class="ink" stroke-width="3" stroke-linejoin="round" d="M70 150V62H190V150"/>
+          <path class="ink" stroke-width="3" d="M130 62V150"/>
+          <!-- UDL -->
+          <g class="ac" stroke-width="1.4" data-udl></g>
+          <path class="ac" stroke-width="1.4" d="M70 36H190"/>
+          <text class="tk" x="114" y="31">w kN/m</text>
+          <!-- supports -->
+          <g class="ink" stroke-width="1.6">
+            <path d="M58 150H82M60 150l-5 7M66 150l-5 7M72 150l-5 7M78 150l-5 7"/>
+            <path d="M118 150H142M120 150l-5 7M126 150l-5 7M132 150l-5 7M138 150l-5 7"/>
+            <path d="M178 150H202M180 150l-5 7M186 150l-5 7M192 150l-5 7M198 150l-5 7"/>
+          </g>
+          <!-- nodes -->
+          <g class="fp" stroke="var(--acc)" stroke-width="2"><circle cx="70" cy="62" r="4"/><circle cx="130" cy="62" r="4"/><circle cx="190" cy="62" r="4"/><circle cx="70" cy="150" r="3"/><circle cx="130" cy="150" r="3"/><circle cx="190" cy="150" r="3"/></g>
+          <!-- peak label -->
+          <rect x="82" y="96" width="38" height="14" rx="7" class="fp" stroke="var(--neon3)"/><text class="tk" x="88" y="106">M max</text>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>Frame Pusher <small>2D FRAME ANALYSIS</small></h2>
+        <p>Interactive 2D frame finite-element analysis. Sketch nodes and members, pick sections from a steel library, add supports, loads and end releases, then read the bending moment, shear and deflection diagrams. A live view of the assembled stiffness matrix shows where every number comes from.</p>
+        <div class="go"><code>ankacha.github.io/frame-pusher</code><span>Launch <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </a>
+
+    <!-- ===== Arch Pusher ===== -->
+    <a class="card" href="arch-pusher/">
+      <div class="art">
+        <span class="tag">Masonry · Thrust line</span>
+        <svg viewBox="0 0 320 180" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <g class="gd" data-grid></g>
+          <!-- ground / abutments -->
+          <path class="fi" opacity=".14" d="M20 150H96V160H20ZM224 150H300V160H224Z"/>
+          <path class="ink" stroke-width="1.4" d="M20 150H300"/>
+          <!-- voussoirs, generated -->
+          <g data-arch></g>
+          <!-- thrust line, generated -->
+          <path class="mg" stroke-width="2" opacity=".3" data-thrust/>
+          <path class="mg dash glow" stroke-width="2" data-thrust/>
+          <!-- load arrows -->
+          <g class="cy bob" stroke-width="1.4" data-archload></g>
+          <text class="tk" x="236" y="40">line of thrust</text>
+          <path class="mg" stroke-width="1" d="M234 37H214L200 52"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>Arch Pusher <small>THRUST-LINE ANALYSIS</small></h2>
+        <p>Lower-bound thrust-line analysis of masonry arches, vaults and domes. Find a line of thrust that stays within the masonry, explore how loads and geometry move it, and look at multi-ring brick arches, bonding and ring separation.</p>
+        <div class="go"><code>ankacha.github.io/arch-pusher</code><span>Launch <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </a>
+
+    <!-- ===== Cable Pusher ===== -->
+    <a class="card" href="cable-pusher/">
+      <div class="art">
+        <span class="tag">Cables · Catenary</span>
+        <svg viewBox="0 0 320 180" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <g class="gd" data-grid></g>
+          <!-- towers -->
+          <path class="ink" stroke-width="3" d="M48 156V40M272 156V40"/>
+          <path class="ink" stroke-width="1.4" d="M36 156H60M260 156H284"/>
+          <!-- backstays -->
+          <path class="ac" stroke-width="1.2" d="M48 40L18 156M272 40L302 156"/>
+          <!-- deck -->
+          <path class="ink" stroke-width="2.2" d="M48 140H272"/>
+          <!-- hangers + cable, generated -->
+          <g class="ac" stroke-width="1" opacity=".8" data-hangers></g>
+          <path class="cy" stroke-width="2.2" opacity=".3" data-cable/>
+          <path class="cy dash glowc" stroke-width="2.2" data-cable/>
+          <!-- tension tags -->
+          <rect x="216" y="22" width="44" height="14" rx="7" class="fp" stroke="var(--neon2)"/><text class="tk" x="223" y="32">T max</text>
+          <rect x="136" y="114" width="48" height="14" rx="7" class="fp" stroke="var(--neon3)"/><text class="tk" x="146" y="124">sag f</text>
+          <path class="mg" stroke-width="1.2" d="M160 44V110" stroke-dasharray="2 3"/>
+          <g class="fp" stroke="var(--acc)" stroke-width="2"><circle cx="48" cy="40" r="4"/><circle cx="272" cy="40" r="4"/></g>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>Cable Pusher <small>CABLES &amp; TENSION</small></h2>
+        <p>Cable and tension structures from first principles. Hang cables between supports, apply point and distributed loads, and watch the catenary shape, sag, horizontal thrust and cable tension respond as you change the span, loading and geometry.</p>
+        <div class="go"><code>ankacha.github.io/cable-pusher</code><span>Launch <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </a>
+
+    <!-- ===== Codex Structura ===== -->
+    <a class="card" href="codex-structura/">
+      <div class="art">
+        <span class="tag">Standards · Lineage</span>
+        <svg viewBox="0 0 320 180" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <g class="gd" data-grid></g>
+          <!-- axis -->
+          <path class="ink" stroke-width="1.2" opacity=".6" d="M24 156H300"/>
+          <g data-ticks></g>
+          <!-- lineage connectors -->
+          <g fill="none" stroke-width="1.3">
+            <path class="ac dash" d="M136 58C146 58 126 80 136 80"/>
+            <path class="ac dash" d="M178 80C188 80 168 102 178 102"/>
+            <path class="mg dash" d="M239 102C249 102 229 124 239 124"/>
+          </g>
+          <!-- bars: superseded (acc), withdrawn (magenta), current (cyan); 1940 at x34, 3.2 px/yr -->
+          <rect x="60" y="52" width="76" height="12" rx="6" class="fa" opacity=".85"/>
+          <rect x="136" y="74" width="42" height="12" rx="6" class="fa" opacity=".85"/>
+          <rect x="178" y="96" width="80" height="12" rx="6" class="fm" opacity=".85"/>
+          <rect x="239" y="118" width="70" height="12" rx="6" class="fc glowc pulse"/>
+          <g class="fp"><circle cx="136" cy="58" r="3"/><circle cx="178" cy="80" r="3"/><circle cx="239" cy="102" r="3"/></g>
+          <text class="tk" x="64" y="47">CP 114</text>
+          <text class="tk" x="140" y="70">CP 110</text>
+          <text class="tk" x="134" y="106">BS 8110</text>
+          <text class="tk" x="190" y="128">EN 1992</text>
+          <!-- legend -->
+          <g transform="translate(206 20)">
+            <circle cx="4" cy="4" r="3.5" class="fc"/><text class="tx" x="11" y="7">current</text>
+            <circle cx="4" cy="16" r="3.5" class="fa"/><text class="tx" x="11" y="19">superseded</text>
+            <circle cx="4" cy="28" r="3.5" class="fm"/><text class="tx" x="11" y="31">withdrawn</text>
+          </g>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>Codex Structura <small>STANDARDS TIMELINE</small></h2>
+        <p>A timeline and lineage explorer for historic British structural standards and codes of practice. Trace how each code was introduced, superseded or withdrawn, to support the appraisal and reuse of existing structures.</p>
+        <div class="go"><code>ankacha.github.io/codex-structura</code><span>Launch <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </a>
+
+  </section>
+</main>
+
+<footer>
+  <span class="v">v1.0</span>
+  <span>ankacha.github.io</span>
+  <span class="sp"></span>
+  <span>Educational tools — always check results independently before use in design.</span>
+</footer>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+
+  /* theme: dark by default, remembered per browser */
+  var root=document.documentElement;
+  try{var saved=localStorage.getItem("ankacha-theme");if(saved==="light"||saved==="dark")root.setAttribute("data-theme",saved)}catch(e){}
+  document.getElementById("thm").addEventListener("click",function(){
+    var t=root.getAttribute("data-theme")==="dark"?"light":"dark";
+    root.setAttribute("data-theme",t);
+    try{localStorage.setItem("ankacha-theme",t)}catch(e){}
+  });
+
+  /* grid backgrounds */
+  document.querySelectorAll("[data-grid]").forEach(function(g){
+    for(var x=0;x<=320;x+=20)el("path",{d:"M"+x+" 0V180"},g);
+    for(var y=0;y<=180;y+=20)el("path",{d:"M0 "+y+"H320"},g);
+  });
+
+  /* Frame Pusher: UDL arrows + mini stiffness-matrix heatmap */
+  var udl=document.querySelector("[data-udl]");
+  for(var x=70;x<=190;x+=15)el("path",{d:"M"+x+" 36V56M"+(x-3)+" 51L"+x+" 56L"+(x+3)+" 51"},udl);
+  var m=document.querySelector("[data-matrix]"),n=6,c=11;
+  el("rect",{x:-4,y:-4,width:n*c+8,height:n*c+8,rx:6,"class":"fp",stroke:"var(--acc)","stroke-width":1},m);
+  for(var i=0;i<n;i++)for(var j=0;j<n;j++){
+    var d=Math.abs(i-j),v=d===0?1:d===1?.55:d===3?.3:0;
+    if(!v)continue;
+    el("rect",{x:j*c,y:i*c,width:c-1.5,height:c-1.5,rx:1.5,fill:d===0?"var(--neon3)":d===3?"var(--neon2)":"var(--acc)",opacity:v},m);
+  }
+  el("text",{x:0,y:n*c+16,"class":"tx"},m).textContent="[K]";
+
+  /* Arch Pusher: semicircular voussoir ring + thrust line */
+  var cx=160,cy=150,ri=56,ro=78,N=13,g=document.querySelector("[data-arch]");
+  function pt(r,a){return [cx+r*Math.cos(a),cy-r*Math.sin(a)]}
+  for(var k=0;k<N;k++){
+    var a0=Math.PI-k*Math.PI/N,a1=Math.PI-(k+1)*Math.PI/N,gap=.012;
+    var p=[pt(ri,a0-gap),pt(ro,a0-gap),pt(ro,a1+gap),pt(ri,a1+gap)];
+    el("path",{d:"M"+p[0]+"L"+p[1]+"A"+ro+" "+ro+" 0 0 1 "+p[2]+"L"+p[3]+"A"+ri+" "+ri+" 0 0 0 "+p[0]+"Z",
+      fill:"color-mix(in srgb,var(--acc) "+(k===6?28:14)+"%,var(--panel))",stroke:"var(--acc)","stroke-width":1.2},g);
+  }
+  /* fill over arch */
+  el("path",{d:"M82 150V80H238V150","class":"ac","stroke-width":1,"stroke-dasharray":"2 4",opacity:.55},g);
+  /* thrust line: wanders between intrados and extrados */
+  var tp=[];
+  for(var s=0;s<=60;s++){
+    var a=Math.PI-s*Math.PI/60,t=s/60;
+    var r=ri+ (ro-ri)*(.5+.38*Math.cos(2*Math.PI*t*1.5+.3));
+    tp.push(pt(r,a).map(function(q){return q.toFixed(1)}).join(" "));
+  }
+  document.querySelectorAll("[data-thrust]").forEach(function(e){e.setAttribute("d","M"+tp.join("L"))});
+  var al=document.querySelector("[data-archload]");
+  [104,132,160,188,216].forEach(function(x){el("path",{d:"M"+x+" 54V72M"+(x-3)+" 67L"+x+" 72L"+(x+3)+" 67"},al)});
+
+  /* Cable Pusher: catenary between tower tops, hangers to deck */
+  var L=48,R=272,H=40,mid=(L+R)/2,half=(R-L)/2,sag=70,aC=0;
+  /* solve a·(cosh(half/a)-1)=sag */
+  var lo=1,hi=5000;for(var it=0;it<80;it++){var am=(lo+hi)/2;if(am*(Math.cosh(half/am)-1)>sag)lo=am;else hi=am}aC=(lo+hi)/2;
+  function yc(x){return H+sag-aC*(Math.cosh((x-mid)/aC)-1)}
+  var ys=yc;
+  var cp=[];for(var x2=L;x2<=R;x2+=4)cp.push(x2+" "+ys(x2).toFixed(1));
+  document.querySelectorAll("[data-cable]").forEach(function(e){e.setAttribute("d","M"+cp.join("L"))});
+  var hg=document.querySelector("[data-hangers]");
+  for(var hx=64;hx<R;hx+=16)el("path",{d:"M"+hx+" "+ys(hx).toFixed(1)+"V140"},hg);
+
+  /* Codex Structura: year ticks */
+  var tk=document.querySelector("[data-ticks]"),yrs=["1940","1960","1980","2000","2020"];
+  yrs.forEach(function(y,i){var x=34+i*64;el("path",{d:"M"+x+" 153V159","class":"ink","stroke-width":1},tk);el("text",{x:x-11,y:170,"class":"tx"},tk).textContent=y});
+})();
+</script>
+</body>
+</html>
