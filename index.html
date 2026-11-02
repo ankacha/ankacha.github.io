@@ -2,9 +2,9 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<title>ankacha · Projects v1.0</title>
+<title>ankacha · Projects v1.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Self-contained, browser-based structural engineering tools: Frame Pusher, Arch Pusher, Cable Pusher and Codex Structura.">
+<meta name="description" content="Self-contained, browser-based structural engineering tools: Frame Pusher, Arch Pusher, Cable Pusher, Lintel Loader and Codex Structura.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2309050f'/%3E%3Cpath d='M6 25V11l10-5 10 5v14' fill='none' stroke='%23b44cff' stroke-width='2.6' stroke-linejoin='round'/%3E%3Cpath d='M6 11h20' stroke='%2319f0ff' stroke-width='2.2'/%3E%3Ccircle cx='16' cy='6' r='2.6' fill='%23ff2bd6'/%3E%3C/svg%3E">
 <style>
 /* ===== tokens: shared cyberpunk theme (Frame Pusher family) ===== */
@@ -56,6 +56,7 @@ main{max-width:1180px;margin:0 auto;padding:44px max(20px,env(safe-area-inset-le
 .card .art svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .card .art::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--panel) 40%,transparent))}
 .tag{position:absolute;top:12px;left:12px;z-index:2;font:700 10px/1 ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:6px;color:var(--ink);background:color-mix(in srgb,var(--panel) 82%,transparent);border:1px solid color-mix(in srgb,var(--acc) 45%,var(--line));backdrop-filter:blur(4px)}
+.tag.new{left:auto;right:12px;color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--acc),var(--neon3));box-shadow:0 0 16px -3px color-mix(in srgb,var(--neon3) 75%,transparent)}
 .card .body{display:flex;flex-direction:column;gap:8px;padding:18px 20px 20px;flex:1}
 .card h2{margin:0;display:flex;align-items:baseline;gap:10px;font-size:19px;font-weight:800;letter-spacing:.01em}
 .card h2 small{font:600 11px ui-monospace,"SF Mono",Menlo,monospace;color:var(--mut);letter-spacing:.04em}
@@ -65,6 +66,12 @@ main{max-width:1180px;margin:0 auto;padding:44px max(20px,env(safe-area-inset-le
 .card .go span{display:inline-flex;align-items:center;gap:6px;flex:none;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px;color:#fff;padding:6px 11px;border-radius:8px;background:linear-gradient(135deg,var(--acc),var(--neon3));box-shadow:0 0 18px -4px color-mix(in srgb,var(--neon3) 70%,transparent)}
 .card .go span svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s}
 .card:hover .go span svg{transform:translateX(3px)}
+/* an odd card out at the end of the grid spans both columns, art beside text */
+@media(min-width:781px){
+  .card:last-child:nth-child(odd){grid-column:1/-1;flex-direction:row}
+  .card:last-child:nth-child(odd) .art{flex:0 0 calc(50% - 11px);aspect-ratio:auto;min-height:280px;border-bottom:0;border-right:1px solid color-mix(in srgb,var(--acc) 35%,var(--line))}
+  .card:last-child:nth-child(odd) .body{padding:24px 26px}
+}
 
 /* ===== card art palette ===== */
 .art .gd{stroke:var(--grid);stroke-width:1}
@@ -87,7 +94,7 @@ main{max-width:1180px;margin:0 auto;padding:44px max(20px,env(safe-area-inset-le
 }
 
 /* ===== footer ===== */
-@media(max-width:520px){#top nav,#top i{display:none}#thm{margin-left:auto}}
+@media(max-width:560px){#top nav,#top i{display:none}#thm{margin-left:auto}}
 footer{max-width:1180px;margin:30px auto 0;padding:18px max(20px,env(safe-area-inset-left,0px)) 34px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;color:var(--mut);font-size:12px;border-top:1px solid color-mix(in srgb,var(--acc) 30%,var(--line))}
 footer .v{font:600 11px ui-monospace,"SF Mono",Menlo,monospace;color:var(--ink);padding:3px 8px;border-radius:6px;border:1px solid color-mix(in srgb,var(--acc) 40%,var(--line));background:color-mix(in srgb,var(--acc) 6%,var(--panel))}
 footer .sp{flex:1}
@@ -96,9 +103,9 @@ footer .sp{flex:1}
 <body>
 
 <header id="top">
-  <a class="tt" href="./">ankacha</a><small>Projects v1.0</small>
+  <a class="tt" href="./">ankacha</a><small>Projects v1.1</small>
   <nav aria-label="Projects">
-    <a href="frame-pusher/">Frame</a><a href="arch-pusher/">Arch</a><a href="cable-pusher/">Cable</a><a href="codex-structura/">Codex</a>
+    <a href="frame-pusher/">Frame</a><a href="arch-pusher/">Arch</a><a href="cable-pusher/">Cable</a><a href="lintel-loader/">Lintel</a><a href="codex-structura/">Codex</a>
   </nav>
   <i aria-hidden="true"></i>
   <button id="thm" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
@@ -110,7 +117,7 @@ footer .sp{flex:1}
   <section class="hero">
     <div class="gh">Structural engineering · Learning tools</div>
     <h1>Push structures around and <span>see how they work.</span></h1>
-    <p>A small family of self-contained, browser-based apps for exploring structural behaviour — frames, masonry arches, cables and the codes that govern them. Each one is a single HTML file: nothing to install, nothing to sign in to, runs on a laptop, tablet or phone.</p>
+    <p>A small family of self-contained, browser-based apps for exploring structural behaviour — frames, masonry arches, cables, lintels and the codes that govern them. Each one is a single HTML file: nothing to install, nothing to sign in to, runs on a laptop, tablet or phone.</p>
     <div class="chips"><span class="chip"><b></b>Single-file HTML</span><span class="chip"><b></b>Runs offline in the browser</span><span class="chip"><b></b>Built for teaching</span></div>
   </section>
 
@@ -253,11 +260,50 @@ footer .sp{flex:1}
       </div>
     </a>
 
+    <!-- ===== Lintel Loader ===== -->
+    <a class="card" href="lintel-loader/">
+      <div class="art">
+        <span class="tag">Masonry · Lintels</span>
+        <span class="tag new">New</span>
+        <svg viewBox="0 0 320 180" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <g class="gd" data-grid></g>
+          <!-- brickwork, generated: courses around the opening, load triangle tinted -->
+          <g data-bricks></g>
+          <!-- ground -->
+          <path class="fi" opacity=".14" d="M30 160H290V168H30Z"/>
+          <path class="ink" stroke-width="1.4" d="M22 160H298"/>
+          <!-- opening jambs -->
+          <path class="ink" stroke-width="1.6" d="M120 160V100M200 160V100"/>
+          <!-- 60° load triangle -->
+          <path class="fm" opacity=".10" d="M120 90L160 20.7L200 90Z"/>
+          <path class="mg glow" stroke-width="1.8" stroke-linejoin="round" d="M120 90L160 20.7L200 90"/>
+          <path class="mg" stroke-width="1" d="M131 90A11 11 0 0 0 125.5 80.5"/>
+          <text class="tk" x="134" y="86">60°</text>
+          <!-- lintel bearing on the piers -->
+          <rect x="104" y="90" width="112" height="10" rx="1.5" class="fa" stroke="var(--neon2)" stroke-width="1.2"/>
+          <!-- dispersal of bearing load into the piers -->
+          <g class="cy dash glowc" stroke-width="1.4"><path d="M112 100L96 160M112 100L118 160M208 100L224 160M208 100L202 160"/></g>
+          <!-- floor load arrows at wall head -->
+          <g class="ac bob" stroke-width="1.4" data-lintload></g>
+          <!-- labels -->
+          <text class="tk" x="214" y="44">load triangle</text>
+          <path class="mg" stroke-width="1" d="M212 41H196L182 54"/>
+          <rect x="232" y="118" width="44" height="14" rx="7" class="fp" stroke="var(--neon2)"/><text class="tk" x="239" y="128">UR 0.78</text>
+          <g class="fp" stroke="var(--acc)" stroke-width="2"><circle cx="112" cy="100" r="3"/><circle cx="208" cy="100" r="3"/></g>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>Lintel Loader <small>LINTEL &amp; PIER DESIGN</small></h2>
+        <p>Masonry lintel and pier design to Eurocodes 6, 3 and 2 with the UK National Annex. Set up the opening, the masonry and the floors and point loads above, then check a steel, concrete or proprietary lintel — with arching action and the 60° load triangle, bearing under concentrated load, pier capacity and a PDF calculation sheet to finish.</p>
+        <div class="go"><code>ankacha.github.io/lintel-loader</code><span>Launch <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </a>
+
   </section>
 </main>
 
 <footer>
-  <span class="v">v1.0</span>
+  <span class="v">v1.1</span>
   <span>ankacha.github.io</span>
   <span class="sp"></span>
   <span>Educational tools — always check results independently before use in design.</span>
@@ -331,6 +377,24 @@ footer .sp{flex:1}
   /* Codex Structura: year ticks */
   var tk=document.querySelector("[data-ticks]"),yrs=["1940","1960","1980","2000","2020"];
   yrs.forEach(function(y,i){var x=34+i*64;el("path",{d:"M"+x+" 153V159","class":"ink","stroke-width":1},tk);el("text",{x:x-11,y:170,"class":"tx"},tk).textContent=y});
+
+  /* Lintel Loader: stretcher-bond wall (x 30–290, y 20–160) with opening 120–200,
+     lintel 104–216 in the 90–100 course, bricks inside the 60° triangle tinted */
+  var bw=document.querySelector("[data-bricks]"),W0=30,W1=290,CH=10,BL=24,AX=160,AY=90-40*Math.tan(Math.PI/3);
+  for(var row=0;row<14;row++){
+    var y0=160-(row+1)*CH,off=row%2?BL/2:0;
+    for(var bx=W0-off;bx<W1;bx+=BL){
+      var x0=Math.max(bx,W0),x1=Math.min(bx+BL,W1);
+      if(y0>=100&&x1>120&&x0<200)continue;          /* opening */
+      if(y0>=90&&y0<100&&x1>104&&x0<216)continue;   /* lintel course */
+      var mx=(x0+x1)/2,my=y0+CH/2,inTri=my<90&&my>AY&&Math.abs(mx-AX)<(my-AY)/Math.tan(Math.PI/3);
+      el("rect",{x:x0+.6,y:y0+.6,width:x1-x0-1.2,height:CH-1.2,rx:1,
+        fill:"color-mix(in srgb,"+(inTri?"var(--neon3) 24%":"var(--acc) 11%")+",var(--panel))",
+        stroke:"color-mix(in srgb,var(--acc) 30%,var(--line))","stroke-width":.6},bw);
+    }
+  }
+  var ll=document.querySelector("[data-lintload]");
+  for(var lx=50;lx<=270;lx+=22)el("path",{d:"M"+lx+" 4V17M"+(lx-3)+" 12L"+lx+" 17L"+(lx+3)+" 12"},ll);
 })();
 </script>
 </body>
